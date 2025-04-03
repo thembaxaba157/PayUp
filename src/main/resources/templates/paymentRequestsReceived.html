@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/layout.html}">
+<head></head>
+<body>
+<div layout:fragment="contents">
+    <section class="paymentRequestsReceivedList">
+        <h2>People that You Owe</h2>
+        <p id="no_payment_requests_received" th:if="${#lists.isEmpty(paymentRequestsReceived)}">You don't owe anyone anything!</p>
+        <!-- <div id="paymentRequestsSent" th:unless="${#lists.isEmpty(paymentRequestsSent)}">                                 
+            <th:block th:each="paymentRequestSent: ${paymentRequestsSent}">                                               
+                <p>Due in: <span th:text="${paymentRequestSent.daysLeftToPay}">05/09/2022</span></p>                      
+                <p>Description: <span th:text="${paymentRequestSent.description}">Lunch</span></p>
+                <p>Amount: <span th:text="${paymentRequestSent.amount}">ZAR 120</span></p>                     
+            </th:block>
+        </div> -->
+        <div id="payment_requests_received" th:unless="${#lists.isEmpty(paymentRequestsReceived)}">
+                                             
+            <table>
+                <thead>
+                    <tr>
+                        <th>Who</th>
+                        <th>What</th>
+                        <th>Due In (days)</th>
+                        <th>How Much</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="payment_requests_sent" th:unless="${#lists.isEmpty(paymentRequestsReceived)}">
+                    <th:block th:each="paymentRequestReceived: ${paymentRequestsReceived}">
+                        <tr>
+                            <td th:text="${paymentRequestReceived.getPersonRequestingPayment.getName}">invalid who</td>
+                            <td th:text="${paymentRequestReceived.getDescription}">invalid what</td>
+                            <td th:text="${paymentRequestReceived.daysLeftToPay}">invalid due</td>
+                            <td th:text="${paymentRequestReceived.getAmountToPay}">invalid pay</td>
+                            
+
+                            <td th:if="${!paymentRequestReceived.isPaid}">
+                                <form action="/payment.action" method="post">
+                                    <input type="hidden" name="paymentRequestId" th:value="${paymentRequestReceived.id}">
+                                    <input id="submit" type="submit" value="Pay">
+                                </form>
+                            </td>
+                            <td th:unless="${!paymentRequestReceived.isPaid}">
+                                <form action="/payment.action" method="post">
+                                    <input id="paid_1" type="hidden" name="paymentRequestId" th:value="${paymentRequestReceived.id}">
+                                </form>
+                            </td>
+                        </tr>
+                    </th:block>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total Unpaid:</th>
+                        <th></th>
+                        <th></th>
+                        <th id="grand_total" th:text=${totalPaid}>ZAR 0</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </section>
+</div>
+</body>
+
+</html>
